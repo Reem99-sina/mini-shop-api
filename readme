@@ -1,0 +1,240 @@
+# Mini Shop API
+
+A modern e-commerce backend built with Fastify, TypeScript, Supabase, and Zod.
+
+
+## 🚀 Features
+
+* Authentication with Supabase
+* JWT Authorization
+* Role-based access control (Admin / User)
+* Product Management
+* Order System
+* Order Items
+* Zod Validation
+* Fastify Middleware
+* Supabase PostgreSQL
+* Soft Delete Products
+* Pagination Support
+* Environment Variables
+* TypeScript Support
+
+
+# 🛠️ Tech Stack
+
+* Node.js
+* Fastify
+* TypeScript
+* Supabase
+* PostgreSQL
+* Zod
+* JWT
+
+
+# 📁 Project Structure
+
+```bash
+src/
+│
+├── config/
+├── middleware/
+├── modules/
+│   ├── auth/
+│   ├── products/
+│   ├── orders/
+│
+├── types/
+├── utils/
+└── server.ts
+```
+
+---
+
+# ⚙️ Installation
+
+## Clone Repository
+
+```bash
+git clone https://github.com/Reem99-sina/mini-shop-api
+cd mini-shop-api
+```
+
+---
+
+## Install Dependencies
+
+```bash
+npm install
+```
+
+---
+
+# 🔑 Environment Variables
+
+Create `.env`
+
+```env
+PORT=5000
+
+SUPABASE_URL=https://jcnmrrvbknuzpomopmld.supabase.co/
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impjbm1ycnZia251enBvbW9wbWxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwOTU0MDAsImV4cCI6MjA5NDY3MTQwMH0.YvkaiPdS5H2AhSbY94SQdnDPsWbhnyrukoru_eUt5HA
+SUPABASE_SERVICE_ROLE=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impjbm1ycnZia251enBvbW9wbWxkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTA5NTQwMCwiZXhwIjoyMDk0NjcxNDAwfQ.a-06gMeAKjH1MEtSVotvJ6suQG3Dt73boVcPkjZzP5E
+
+JWT_SECRET=supersecret
+```
+
+---
+
+# ▶️ Running Project
+
+## Development
+
+```bash
+npm run dev
+```
+
+---
+
+## Production Build
+
+```bash
+npm run build
+npm start
+```
+
+---
+
+# 📦 API Endpoints
+
+---
+
+# 🔐 Auth
+
+| Method | Endpoint              | Description               |
+| ------ | --------------------- | ------------------------- |
+| POST   | /auth/register        | Register user             |
+| POST   | /auth/login           | Login                     |
+| POST   | /auth/forgot-password | Send reset password email |
+| GET    | /auth/me              | Current user profile      |
+
+---
+
+# 🛒 Products
+
+| Method | Endpoint      | Description                 |
+| ------ | ------------- | --------------------------- |
+| GET    | /products     | Get all active products     |
+| GET    | /products/:id | Get single product          |
+| POST   | /products     | Create product (Admin)      |
+| PATCH  | /products/:id | Update product (Admin)      |
+| DELETE | /products/:id | Soft delete product (Admin) |
+
+---
+
+# 📦 Orders
+
+| Method | Endpoint           | Description                 |
+| ------ | ------------------ | --------------------------- |
+| POST   | /orders            | Create order                |
+| GET    | /orders/my         | Current user orders         |
+| GET    | /orders            | All orders (Admin)          |
+| PATCH  | /orders/:id/status | Update order status (Admin) |
+
+---
+
+# 🧾 Example Product Payload
+
+```json
+{
+  "title": "iPhone 15",
+  "description": "Apple smartphone",
+  "price": 1200,
+  "category": "phones",
+  "image": "https://example.com/image.jpg"
+}
+```
+
+---
+
+# 🛒 Example Order Payload
+
+```json
+{
+  "items": [
+    {
+      "product_id": "PRODUCT_UUID",
+      "quantity": 2
+    }
+  ]
+}
+```
+
+---
+
+# 🔐 Authentication
+
+Use Bearer Token:
+
+```http
+Authorization: Bearer YOUR_TOKEN
+```
+
+---
+
+# ✅ Validation
+
+All routes use Zod validation.
+
+Example error response:
+
+```json
+{
+  "message": "Validation Error",
+  "validationErrors": []
+}
+```
+
+---
+
+# 🗄️ Database Tables
+
+## users
+
+* id
+* name
+* email
+* role
+
+---
+
+## products
+
+* id
+* title
+* description
+* price
+* category
+* image
+* is_active
+
+---
+
+## orders
+
+* id
+* user_id
+* total
+* status
+* created_at
+
+---
+
+## order_items
+
+* id
+* order_id
+* product_id
+* quantity
+* price
+
+
