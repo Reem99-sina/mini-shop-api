@@ -1,15 +1,15 @@
-# fly.toml app configuration file generated for mini-shop-api-divine-shadow-4710 on 2026-05-18T19:42:08+03:00
+# fly.toml app configuration file generated for mini-shop-api-glimmering-hollow-3106 on 2026-05-18T19:48:06+03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'mini-shop-api-divine-shadow-4710'
+app = 'mini-shop-api-glimmering-hollow-3106'
 primary_region = 'cdg'
 
 [build]
 
 [http_service]
-  internal_port = 3000
+  internal_port = 5000
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
@@ -18,6 +18,5 @@ primary_region = 'cdg'
 
 [[vm]]
   memory = '1gb'
-  cpu_kind = 'shared'
   cpus = 1
   memory_mb = 1024

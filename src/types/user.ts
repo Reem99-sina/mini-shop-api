@@ -5,3 +5,11 @@ export interface User {
   createdAt: string;
   role:'admin'|'user';
 }
+
+export interface dataRegisterUser {
+ 
+  name: string;
+  email: string;
+  password: string;
+  role?: 'admin'|'user';
+}

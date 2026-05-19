@@ -11,15 +11,19 @@ export class AuthService {
     const { name, email, password, role } = data;
 
     // Create auth user
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: "http://localhost:3000/auth/callback",
-      },
-    });
+    const { data: authData, error: authError } =
+      await supabase.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+      });
+    // supabase.auth.signUp({
+    //   email,
+    //   password,
+    // });
 
     if (authError) {
+      console.error("Error creating auth user:", authError);
       throw new Error(authError.message);
     }
 
@@ -50,7 +54,7 @@ export class AuthService {
       .from("users")
       .select("*")
       .eq("email", userId)
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
     return data;
@@ -65,6 +69,7 @@ export class AuthService {
     });
 
     if (error) {
+      console.error("Login error:", error);
       throw new Error(error.message);
     }
 
@@ -82,6 +87,7 @@ export class AuthService {
         name: profile?.name || user.user_metadata?.name || "",
         email: user.email,
         createdAt: user.created_at,
+        role: profile?.role || "user",
       },
 
       token: session.access_token,
@@ -117,5 +123,15 @@ export class AuthService {
     return {
       message: "Reset password email sent",
     };
+  }
+  static async resendConfirmation(email: string) {
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email,
+    });
+
+    if (error) throw new Error(error.message);
+
+    return { message: "Confirmation email sent" };
   }
 }

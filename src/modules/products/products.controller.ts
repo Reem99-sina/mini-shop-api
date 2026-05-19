@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { ProductsService } from "./products.service";
+import { supabase } from "../../config/supabase";
 
 
 export class ProductsController {
@@ -51,20 +52,81 @@ export class ProductsController {
   }
 
   // POST /products (admin)
-  static async create(
-    request: FastifyRequest<{
-      Body: {
-        title: string;
-        description?: string;
-        price: number;
-        category?: string;
-        image?: string;
-      };
-    }>,
-    reply: FastifyReply
-  ) {
+   static async create(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const product = await ProductsService.create(request.body);
+      const parts = (request as any).parts();
+
+      let title = "";
+      let description = "";
+      let category = "";
+      let price = 0;
+      let imageUrl = "";
+
+      for await (const part of parts) {
+        // TEXT FIELDS
+        if (part.type === "field") {
+          if (part.fieldname === "title") {
+            title = String(part.value);
+          }
+
+          if (part.fieldname === "description") {
+            description = String(part.value);
+          }
+
+          if (part.fieldname === "category") {
+            category = String(part.value);
+          }
+
+          if (part.fieldname === "price") {
+            price = Number(part.value);
+          }
+        }
+
+        // FILE
+        if (part.type === "file") {
+          const buffer = await part.toBuffer();
+
+          const filePath = `products/${Date.now()}-${part.filename}`;
+
+          const { error } = await supabase.storage
+            .from("products")
+            .upload(filePath, buffer, {
+              contentType: part.mimetype,
+            });
+
+          if (error) {
+            console.error("Error uploading file:", error);
+            throw new Error(error.message);
+          }
+
+          const { data } = supabase.storage
+            .from("products")
+            .getPublicUrl(filePath);
+
+          imageUrl = data.publicUrl;
+        }
+      }
+
+      // VALIDATION
+      if (!title) {
+        return reply.status(400).send({
+          message: "Title is required",
+        });
+      }
+
+      if (!price || isNaN(price)) {
+        return reply.status(400).send({
+          message: "Valid price is required",
+        });
+      }
+
+      const product = await ProductsService.create({
+        title,
+        description,
+        category,
+        price,
+        image: imageUrl,
+      });
 
       return reply.status(201).send(product);
     } catch (err: any) {

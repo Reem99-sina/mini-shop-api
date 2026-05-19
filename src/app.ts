@@ -7,7 +7,9 @@ import { ApiError } from "./lib/errors";
 import { ZodError } from "zod";
 import productsRoutes from "./modules/products/products.routes";
 import ordersRoutes from "./modules/orders/order.routes";
+import multipart from "@fastify/multipart";
 
+;
 const app = Fastify({
   logger: env.NODE_ENV !== "test",
 });
@@ -44,8 +46,11 @@ const app = Fastify({
 //       message: "Route not found"
 //     })
 //   );
-app.register(cors);
-
+app.register(cors, {
+  origin: true, // or specific domains
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+});
+app.register(multipart)
 app.register(jwt, {
   secret: process.env.JWT_SECRET!,
 });

@@ -28,7 +28,7 @@ export default async function productsRoutes(app: FastifyInstance) {
 
   app.post(
     "/",
-    { preHandler: [auth(endPoint.admin) as any, validation(createProductSchema)] },
+    { preHandler: [auth(endPoint.admin) as any] },
     ProductsController.create,
   );
   app.patch(

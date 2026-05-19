@@ -1,6 +1,12 @@
 import { FastifyInstance } from "fastify";
 
-import { register, login, me, forgotPassword } from "./auth.controller";
+import {
+  register,
+  login,
+  me,
+  forgotPassword,
+  resendConfirmation,
+} from "./auth.controller";
 import { validation } from "../../middleware/validation";
 import { loginSchema, registerSchema } from "./auth.schema";
 import { auth } from "../../middleware/auth";
@@ -12,7 +18,7 @@ export default async function authRoutes(app: FastifyInstance) {
     {
       preHandler: validation(registerSchema),
     },
-    register,
+    register as any,
   );
   app.post(
     "/login",
@@ -29,4 +35,5 @@ export default async function authRoutes(app: FastifyInstance) {
     me,
   );
   app.post("/forgot-password", forgotPassword);
+  app.post("/resend-confirmation", resendConfirmation);
 }
