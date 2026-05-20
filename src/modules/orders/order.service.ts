@@ -12,7 +12,7 @@ export class OrdersService {
           .from("products")
           .select("price")
           .eq("id", item.product_id)
-          .single();
+          .maybeSingle();
 
         const price = product?.price || 0;
         total += price * item.quantity;
@@ -34,7 +34,7 @@ export class OrdersService {
         status: "pending",
       })
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) throw new Error(error.message);
 
@@ -100,7 +100,7 @@ export class OrdersService {
       .update({ status })
       .eq("id", id)
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) throw new Error(error.message);
 

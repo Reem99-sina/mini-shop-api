@@ -10,38 +10,32 @@ export class AuthService {
   }) {
     const { name, email, password, role } = data;
 
-    // Create auth user
+    // Admin client
     const { data: authData, error: authError } =
       await supabase.auth.admin.createUser({
         email,
         password,
         email_confirm: true,
       });
-    // supabase.auth.signUp({
-    //   email,
-    //   password,
-    // });
 
     if (authError) {
-      console.error("Error creating auth user:", authError);
       throw new Error(authError.message);
     }
 
-    if (!authData?.user) {
-      throw new Error("User not created or email confirmation required");
+    if (!authData.user) {
+      throw new Error("User not created");
     }
 
-    // Insert into users table
     const { data: userData, error: userError } = await supabase
       .from("users")
       .insert({
-        id: authData?.user.id,
+        id: authData.user.id,
         name,
         email,
         role: role || "user",
       })
       .select()
-      .single();
+      .maybeSingle();
 
     if (userError) {
       throw new Error(userError.message);
@@ -103,7 +97,7 @@ export class AuthService {
       .from("users")
       .select("*")
       .eq("id", userId)
-      .single();
+      .maybeSingle();
 
     if (error) {
       throw new Error(error.message);

@@ -143,9 +143,10 @@ export class ProductsService {
         is_active: true,
       })
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) {
+      console.error("Error creating product:", error);
       throw new Error(error.message);
     }
 
@@ -169,7 +170,7 @@ export class ProductsService {
       .update(data)
       .eq("id", id)
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) {
       throw new Error(error.message);
